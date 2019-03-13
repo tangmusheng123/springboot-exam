@@ -10,15 +10,16 @@ public class DataSource {
         Map<String, String> data1 = new HashMap<>();
         data1.put("password", "student");
         data1.put("role", "student");
-//        data1.put("permission", "view");
+        data1.put("permission", "view");
 
         Map<String, String> data2 = new HashMap<>();
         data2.put("password", "teacher");
         data2.put("role", "teacher");
-//        data2.put("permission", "view,edit");
+        data2.put("permission", "view,edit");
         Map<String, String> data3 = new HashMap<>();
-        data2.put("password", "admin");
-        data2.put("role", "admin");
+        data3.put("permission", "view,edit");
+        data3.put("password", "admin");
+        data3.put("role", "admin");
 
         data.put("student", data1);
         data.put("teacher", data2);

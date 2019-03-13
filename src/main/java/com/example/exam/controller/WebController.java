@@ -7,9 +7,7 @@ import com.example.exam.util.JWTUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,7 @@ public class WebController {
         System.out.println(username);
         UserBean userBean = userService.getUser(username);
         if (userBean.getPassword().equals(password)) {
-            return new com.example.exam.model.ResponseBean(200, "Login success", JWTUtil.sign(username, password));
+            return new com.example.exam.model.ResponseBean(201, "Login success", JWTUtil.sign(username, password));
         } else {
             throw new UnauthorizedException();
         }
@@ -74,7 +72,7 @@ public class WebController {
     }
 
     @GetMapping("/require_permission")
-    @RequiresPermissions(logical = Logical.AND, value = {"view", "edit"})
+    @RequiresRoles("teacher")
     public com.example.exam.model.ResponseBean requirePermission() {
         return new com.example.exam.model.ResponseBean(200, "You are visiting permission require edit,view", null);
     }
