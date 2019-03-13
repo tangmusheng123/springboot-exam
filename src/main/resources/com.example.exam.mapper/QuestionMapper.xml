@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.exam.mapper.QuestionMapper">
+  <resultMap id="BaseResultMap" type="com.example.exam.model.Question">
+    <id column="question_id" jdbcType="INTEGER" property="questionId" />
+    <result column="questiontype_id" jdbcType="INTEGER" property="questiontypeId" />
+    <result column="question_type" jdbcType="VARCHAR" property="questionType" />
+    <result column="question_answer" jdbcType="VARCHAR" property="questionAnswer" />
+    <result column="question_time" jdbcType="VARCHAR" property="questionTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.example.exam.model.Question">
+    <result column="question_content" jdbcType="LONGVARCHAR" property="questionContent" />
+    <result column="question_a" jdbcType="LONGVARCHAR" property="questionA" />
+    <result column="question_b" jdbcType="LONGVARCHAR" property="questionB" />
+    <result column="question_c" jdbcType="LONGVARCHAR" property="questionC" />
+    <result column="question_d" jdbcType="LONGVARCHAR" property="questionD" />
+    <result column="question_e" jdbcType="LONGVARCHAR" property="questionE" />
+    <result column="question_f" jdbcType="LONGVARCHAR" property="questionF" />
+    <result column="question_g" jdbcType="LONGVARCHAR" property="questionG" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    question_id, questiontype_id, question_type, question_answer, question_time
+  </sql>
+  <sql id="Blob_Column_List">
+    question_content, question_a, question_b, question_c, question_d, question_e, question_f, 
+    question_g
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.example.exam.model.QuestionExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.example.exam.model.QuestionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from question
+    where question_id = #{questionId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from question
+    where question_id = #{questionId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.example.exam.model.QuestionExample">
+    delete from question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.example.exam.model.Question">
+    insert into question (question_id, questiontype_id, question_type, 
+      question_answer, question_time, question_content, 
+      question_a, question_b, question_c, 
+      question_d, question_e, question_f, 
+      question_g)
+    values (#{questionId,jdbcType=INTEGER}, #{questiontypeId,jdbcType=INTEGER}, #{questionType,jdbcType=VARCHAR}, 
+      #{questionAnswer,jdbcType=VARCHAR}, #{questionTime,jdbcType=VARCHAR}, #{questionContent,jdbcType=LONGVARCHAR}, 
+      #{questionA,jdbcType=LONGVARCHAR}, #{questionB,jdbcType=LONGVARCHAR}, #{questionC,jdbcType=LONGVARCHAR}, 
+      #{questionD,jdbcType=LONGVARCHAR}, #{questionE,jdbcType=LONGVARCHAR}, #{questionF,jdbcType=LONGVARCHAR}, 
+      #{questionG,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.exam.model.Question">
+    insert into question
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="questionId != null">
+        question_id,
+      </if>
+      <if test="questiontypeId != null">
+        questiontype_id,
+      </if>
+      <if test="questionType != null">
+        question_type,
+      </if>
+      <if test="questionAnswer != null">
+        question_answer,
+      </if>
+      <if test="questionTime != null">
+        question_time,
+      </if>
+      <if test="questionContent != null">
+        question_content,
+      </if>
+      <if test="questionA != null">
+        question_a,
+      </if>
+      <if test="questionB != null">
+        question_b,
+      </if>
+      <if test="questionC != null">
+        question_c,
+      </if>
+      <if test="questionD != null">
+        question_d,
+      </if>
+      <if test="questionE != null">
+        question_e,
+      </if>
+      <if test="questionF != null">
+        question_f,
+      </if>
+      <if test="questionG != null">
+        question_g,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="questionId != null">
+        #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="questiontypeId != null">
+        #{questiontypeId,jdbcType=INTEGER},
+      </if>
+      <if test="questionType != null">
+        #{questionType,jdbcType=VARCHAR},
+      </if>
+      <if test="questionAnswer != null">
+        #{questionAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="questionTime != null">
+        #{questionTime,jdbcType=VARCHAR},
+      </if>
+      <if test="questionContent != null">
+        #{questionContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionA != null">
+        #{questionA,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionB != null">
+        #{questionB,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionC != null">
+        #{questionC,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionD != null">
+        #{questionD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionE != null">
+        #{questionE,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionF != null">
+        #{questionF,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionG != null">
+        #{questionG,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.example.exam.model.QuestionExample" resultType="java.lang.Integer">
+    select count(*) from question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update question
+    <set>
+      <if test="record.questionId != null">
+        question_id = #{record.questionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.questiontypeId != null">
+        questiontype_id = #{record.questiontypeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.questionType != null">
+        question_type = #{record.questionType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.questionAnswer != null">
+        question_answer = #{record.questionAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.questionTime != null">
+        question_time = #{record.questionTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.questionContent != null">
+        question_content = #{record.questionContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.questionA != null">
+        question_a = #{record.questionA,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.questionB != null">
+        question_b = #{record.questionB,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.questionC != null">
+        question_c = #{record.questionC,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.questionD != null">
+        question_d = #{record.questionD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.questionE != null">
+        question_e = #{record.questionE,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.questionF != null">
+        question_f = #{record.questionF,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.questionG != null">
+        question_g = #{record.questionG,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update question
+    set question_id = #{record.questionId,jdbcType=INTEGER},
+      questiontype_id = #{record.questiontypeId,jdbcType=INTEGER},
+      question_type = #{record.questionType,jdbcType=VARCHAR},
+      question_answer = #{record.questionAnswer,jdbcType=VARCHAR},
+      question_time = #{record.questionTime,jdbcType=VARCHAR},
+      question_content = #{record.questionContent,jdbcType=LONGVARCHAR},
+      question_a = #{record.questionA,jdbcType=LONGVARCHAR},
+      question_b = #{record.questionB,jdbcType=LONGVARCHAR},
+      question_c = #{record.questionC,jdbcType=LONGVARCHAR},
+      question_d = #{record.questionD,jdbcType=LONGVARCHAR},
+      question_e = #{record.questionE,jdbcType=LONGVARCHAR},
+      question_f = #{record.questionF,jdbcType=LONGVARCHAR},
+      question_g = #{record.questionG,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update question
+    set question_id = #{record.questionId,jdbcType=INTEGER},
+      questiontype_id = #{record.questiontypeId,jdbcType=INTEGER},
+      question_type = #{record.questionType,jdbcType=VARCHAR},
+      question_answer = #{record.questionAnswer,jdbcType=VARCHAR},
+      question_time = #{record.questionTime,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.exam.model.Question">
+    update question
+    <set>
+      <if test="questiontypeId != null">
+        questiontype_id = #{questiontypeId,jdbcType=INTEGER},
+      </if>
+      <if test="questionType != null">
+        question_type = #{questionType,jdbcType=VARCHAR},
+      </if>
+      <if test="questionAnswer != null">
+        question_answer = #{questionAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="questionTime != null">
+        question_time = #{questionTime,jdbcType=VARCHAR},
+      </if>
+      <if test="questionContent != null">
+        question_content = #{questionContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionA != null">
+        question_a = #{questionA,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionB != null">
+        question_b = #{questionB,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionC != null">
+        question_c = #{questionC,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionD != null">
+        question_d = #{questionD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionE != null">
+        question_e = #{questionE,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionF != null">
+        question_f = #{questionF,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionG != null">
+        question_g = #{questionG,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where question_id = #{questionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.example.exam.model.Question">
+    update question
+    set questiontype_id = #{questiontypeId,jdbcType=INTEGER},
+      question_type = #{questionType,jdbcType=VARCHAR},
+      question_answer = #{questionAnswer,jdbcType=VARCHAR},
+      question_time = #{questionTime,jdbcType=VARCHAR},
+      question_content = #{questionContent,jdbcType=LONGVARCHAR},
+      question_a = #{questionA,jdbcType=LONGVARCHAR},
+      question_b = #{questionB,jdbcType=LONGVARCHAR},
+      question_c = #{questionC,jdbcType=LONGVARCHAR},
+      question_d = #{questionD,jdbcType=LONGVARCHAR},
+      question_e = #{questionE,jdbcType=LONGVARCHAR},
+      question_f = #{questionF,jdbcType=LONGVARCHAR},
+      question_g = #{questionG,jdbcType=LONGVARCHAR}
+    where question_id = #{questionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.exam.model.Question">
+    update question
+    set questiontype_id = #{questiontypeId,jdbcType=INTEGER},
+      question_type = #{questionType,jdbcType=VARCHAR},
+      question_answer = #{questionAnswer,jdbcType=VARCHAR},
+      question_time = #{questionTime,jdbcType=VARCHAR}
+    where question_id = #{questionId,jdbcType=INTEGER}
+  </update>
+</mapper>
