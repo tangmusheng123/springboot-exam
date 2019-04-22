@@ -8,10 +8,6 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/exam?characterEncoding=utf-8
     username: root
     password: mysql
-#url: jdbc:mysql://39.108.106.29:3306/exam
-#  username: root
-#  password: 8211lzj
-#mybatis
 mybatis:
   typeAliasesPackage: com.example.exam.model
   mapperLocations: classpath:com.example.exam.mapper/*.xml
