@@ -1,5 +1,6 @@
 package com.example.exam.shiro;
 
+import com.example.exam.model.User;
 import com.example.exam.model.UserBean;
 import com.example.exam.service.UserService;
 import com.example.exam.util.JWTUtil;
@@ -46,10 +47,10 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String username = JWTUtil.getUsername(principals.toString());
-        UserBean user = userService.getUser(username);
+        User user = userService.getUserinfo(username);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addRole(user.getRole());
-        Set<String> permission = new HashSet<>(Arrays.asList(user.getPermission().split(",")));
+        simpleAuthorizationInfo.addRole(user.getUserRole());
+        Set<String> permission = new HashSet<>(Arrays.asList(user.getUserPermission().split(",")));
         System.out.println(permission);
         simpleAuthorizationInfo.addStringPermissions(permission);
         System.out.println(simpleAuthorizationInfo.getRoles());
@@ -68,12 +69,12 @@ public class MyRealm extends AuthorizingRealm {
             throw new AuthenticationException("token invalid");
         }
 
-        UserBean userBean = userService.getUser(username);
+        User userBean = userService.getUserinfo(username);
         if (userBean == null) {
             throw new AuthenticationException("User didn't existed!");
         }
 
-        if (! JWTUtil.verify(token, username, userBean.getPassword())) {
+        if (! JWTUtil.verify(token, username, userBean.getUserPassword())) {
             throw new AuthenticationException("Username or password error");
         }
 

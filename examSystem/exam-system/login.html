@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>登陆页面</title>
+		<script type='text/javascript' src='js/hook.js'></script>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+		<link rel="stylesheet" type="text/css" href="css/common.css">
+		<link rel="stylesheet" type="text/css" href="js/layui/css/layui.css">
+		<script type="text/javascript" src="js/layui/layui.all.js"></script>
+	</head>
+	<body>
+		<!--top menu-->
+		<header>
+			<img src="img/图标.jpg">
+			<strong>在线考试管理系统</strong>
+		</header>
+		<!-- section area -->
+		<div class="section col-md-10  clearfix">
+			<div class="tab-content">
+				<div class="ion-log-in1">
+					<p class="p1">登陆</p>
+					<form method="get" action="student.html" class="form-denglu">
+						<input type="text" id="studentNum_input" placeholder="请输入账号" value="">
+						<input type="password" id="passwd_rigester_input" placeholder="请输入密码" value="">
+					</form>
+					<form method="get" class="form-denglu" id="login1">
+						<input type="button" value="登陆" class="btn btn-info" id="denglu" onclick="login()">
+					</form>
+				</div>
+			</div>
+		</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/cookie.js"></script>
+<script type="text/javascript" src="js/interceptor.js"></script>
+<!-- <script type="text/javascript" src="js/layui/layui.all.js"></script> -->
+<script type="text/javascript">
+	function login(){
+		var username = $('#studentNum_input').val();
+		var password = $('#passwd_rigester_input').val();
+	
+
+		$.ajax({
+		    type: "post",
+		    url: "http://localhost:7800/login",
+		    contentType: "application/x-www-form-urlencoded",
+		    data:{username:username,password:password},
+		    success: function(res) {
+		    	if(res.code=="200"){
+				layer.msg(res.msg,{
+				icon: 1,
+				time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				}); 
+				setCookie("token",res.data.token);
+				setCookie("usertype",res.data.usertype);
+				setCookie("username",username);
+				if(res.data.usertype=="student"){
+					window.location.href="student.html";  
+     				window.event.returnValue=false;
+				}else if(res.data.usertype=="teacher"){
+					window.location.href="teacher/student-manage.html";  
+     				window.event.returnValue=false;
+				}else{
+					window.location.href="teacher/admin-manage.html";  
+     				window.event.returnValue=false;
+				}
+		    }
+			},
+		    error:function(XMLHttpRequest, textStatus, errorThrown){
+		    	layer.msg("账号或者密码错误");
+		    }
+		})
+	}
+		 
+		 // alert(324);
+		</script>
+	</body>
+
+</html>

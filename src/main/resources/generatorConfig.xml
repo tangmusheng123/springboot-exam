@@ -26,12 +26,12 @@
                         password="${jdbc.password}">
         </jdbcConnection>
 
-        <javaModelGenerator targetPackage="com.example.exam.model" targetProject="exam\src\main\java"/>
+        <javaModelGenerator targetPackage="com.example.exam.model" targetProject="/Users/apple/Desktop/exam_springboot/src/main/java"/>
 
-        <sqlMapGenerator targetPackage="com.example.exam.mapper" targetProject="exam\src\main\resources"/>
+        <sqlMapGenerator targetPackage="com.example.exam.mapper" targetProject="/Users/apple/Desktop/exam_springboot/src/main/resources"/>
 
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.exam.mapper"
-                             targetProject="exam\src\main\java"/>
+                             targetProject="/Users/apple/Desktop/exam_springboot/src/main/java"/>
         <!--生成全部表tableName设为%-->
         <table tableName="%">
             <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->

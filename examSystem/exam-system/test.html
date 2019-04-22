@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+<title>考试中</title>
+<meta name="description" content="">
+<link href="css/base.css" rel="stylesheet" type="text/css">
+<link href="css/mcen-top.css" rel="stylesheet" type="text/css">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<link href="css/tk_navleft.css" rel="stylesheet" type="text/css">
+<link href="css/side2.css" rel="stylesheet" type="text/css">
+<link href="css/practice.css" rel="stylesheet" type="text/css">
+<link href="css/p_dis.css" rel="stylesheet" type="text/css">
+<link href="css/moni-paper.css" rel="stylesheet" type="text/css">
+<link href="css/ui-dialog.css" rel="stylesheet" type="text/css">
+<link href="css/common.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="css/pub-dialog.css">
+<script type="text/javascript" charset="utf-8" defer="" async="" src="js/tongji.js"></script>
+<script type="text/javascript" src="js/cookie.js"></script>
+<link rel="stylesheet" type="text/css" href="js/layui/css/layui.css">
+<script type="text/javascript" src="js/layui/layui.all.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/common.js">
+</script>
+<style type="text/css">
+    .ischoose{
+        background-color: #b1b6bf;
+    }
+</style>
+
+
+<div class="pracontent clearfix">
+    
+    <div class="ui-progress f-shadow clearfix" >
+        <div id="m__ruleInfo" class="ui-progress-sub"  data-spy="scroll" data-target=".navbar-example">
+            <div class="navBox">
+                <a href="#choose" class="btn this" data-ruleid="1747372">单项选择题</a>
+                <a href="#fill" class="btn" data-ruleid="1747373">多项选择题</a>
+            </div>
+        </div>
+    </div>
+    <div class="dopra-con clearfix">
+        <div class="pra-left-con pra-right-font16">
+            <div id="questionModule" class="" >
+                <div class="m__ruleTitle" data-ruleid="1747372">
+                    <div  id="choose" class="m-secpart"> 一、单选题</div>
+                </div>
+        <ul class="m__ruleQuest" data-ruleid="1747372" data-loadstate="notget" id="question01">
+   
+        </ul>
+<div id="fill" class="m__ruleTitle" data-ruleid="1747373">
+    <div  class="m-secpart"> 二、多选题</div>
+</div>
+    <ul class="m__ruleQuest" data-ruleid="1747373" data-loadstate="notget" id="question02">
+    
+</ul>
+            <!-- 题目切换栏 -->
+                <div id="pageBar"></div>
+        </div>
+        <!--右侧设置-->
+        <div class="pra-right-con">
+            <div id="m__rightPart" class="pra-right-con-sub" style="">
+                
+                <div class="time-card f-mt20 bor">
+                        <div class="y-time">
+                            <div class="f-fl" id="timer"> </div>
+                            
+                        </div>
+                    <!--答题卡区域-->
+                    <div class="rightArea-answer clear">
+                        <div id="answerCard"><div class="hd clearfix"> 
+        <span class="title f-fl">答题卡 <span class="e__doneCount card-count" style="font-size: 12px;color: #F06000;margin-left: 10px"></span></span> 
+    </div>
+    <div class="bd clear" style="">
+    
+        <dl class="panel-item">
+            <dt>单项选择题<em></em></dt>
+            <dd class="panel-order" id="signresult">
+            </dd>
+        </dl>
+    
+        <dl class="panel-item">
+            <dt>多项选择题<em></em></dt>
+            <dd class="panel-order" id="mostresult">
+        
+                <a href="javascript:;" class="e__answerCard page-card-item" data-orderid="3">3</a>
+        
+            </dd>                       	
+        </dl>
+                </div>
+                    </div>
+                        <div class="cad-color clear">
+                            <div class="panel-order-notice panel-notice-t">
+                                <em>已做</em><i class="a doit"></i>
+                                <em>未做</em><i class="a normal"></i>
+                            </div>
+                        </div>
+                        <div class="ft">
+                            
+                            <div class="btn" id="submitbtn" disabled><a class="btn__submit" onclick="submit()">交卷</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--右侧设置 end-->
+    </div>
+</div>
+<input type="hidden" id="signnumber">
+<input type="hidden" id="mostnumber">
+<input type="hidden" id="signquestionlist">
+<input type="hidden" id="mostquestionlist">
+<script type="text/javascript">
+//交卷
+function submit(){
+    var signnumber=$('#signnumber').val();
+    var mostnumber=$('#mostnumber').val();
+    var signquestionlist=$('#signquestionlist').val();
+    var mostquestionlist=$('#mostquestionlist').val();
+    var mapsign = new Map();
+    var mapmost = new Map();
+    for(var i=1;i<=signnumber;i++){
+        var answername='answername'+i;
+        var signanswer=$("input[name="+answername+"]:checked").val();
+        // console.log(signanswer);
+        if(signanswer==undefined){
+            $('#signresult'+i).attr('class','e__answerCard page-card-item ');
+            layer.msg("单选题第"+i+"道还为作答");
+            return false;
+        }else{
+            $('#signresult'+i).attr('class','e__answerCard page-card-item ischoose');
+        }
+        mapsign.set(i,signanswer);
+    }
+    for(var i=1;i<=mostnumber;i++){
+        var mostanswername='mostanswername'+i;
+        var mostanswer="";
+        $("input:checkbox[name="+mostanswername+"]:checked").each(function() {
+            mostanswer += $(this).val() + ",";
+        });
+        if(mostanswer==undefined||mostanswer==""){
+            $('#mostresult'+i).attr('class','e__answerCard page-card-item ');
+            layer.msg("多选题第"+i+"道还为作答");
+            return false;
+        }else{
+            $('#mostresult'+i).attr('class','e__answerCard page-card-item ischoose');
+        }
+        mapmost.set(i,mostanswer);
+    }
+    // console.log(mapmost);
+    var map=new Map();
+    map.set("sign",mapsign);
+    map.set("most",mapmost);
+    var examid=getQueryString("examid");
+    var mapsign=_strMapToObj(mapsign);
+    var mapmost=_strMapToObj(mapmost);
+
+    mapsign=JSON.stringify(mapsign);
+    mapmost=JSON.stringify(mapmost);
+
+    // console.log(mapsign);
+    $.ajax({
+        type: "post",
+        url: "http://localhost:7800/student/answerdata",
+        contentType: "application/x-www-form-urlencoded",
+        beforeSend: function(request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        data:{username:username,mapsign:mapsign,mapmost:mapmost,signquestionlist:signquestionlist,mostquestionlist:mostquestionlist,examid:examid,mostnumber:mostnumber,signnumber:signnumber},
+        success:function(res){
+            layer.msg("交卷成功,2s后返回");
+            $('#submitbtn').html("");
+            setTimeout(function(){
+                window.location.href="student.html"
+            },2000);
+
+        }
+        ,
+        error:function(xhr){
+            layer.msg("您还未登录");
+            setTimeout(function(){
+                window.location.href="login.html"
+            },2000);
+        }
+
+    })
+
+}
+
+//map装json
+   function _strMapToObj(strMap){
+    var obj= Object.create(null);
+    for (var[k,v] of strMap) {
+      obj[k] = v;
+    }
+    return obj;
+  }
+
+
+//数据接口
+//单选和多选分别俩个小json，题目的分数，题目的编号，abcdef选项（为小json）等
+var username=getCookie("username");
+var token=getCookie("token");
+var examid=getQueryString("examid");
+$.ajax({
+    type: "post",
+    url: "http://localhost:7800/student/gettest",
+    contentType: "application/x-www-form-urlencoded",
+    beforeSend: function(request) {
+        request.setRequestHeader("Authorization", token);
+    },
+    data:{username:username,examid:examid},
+    success: function(res) {
+        if(res.code=="200"){
+            var signhtml="";//01单选
+            var mosthtml="";//02多选
+            var signresult="";
+            var mostresult="";
+            var signnumber="";
+            var mostnumber="";
+            var signquestionlist="";
+            var mostquestionlist="";
+            if(res.data.listQuestion01!=""){
+                for(var i=0;i<res.data.listQuestion01.length;i++){
+                    //控制结果
+                    signresult+='<a href="javascript:;" class="e__answerCard page-card-item " id=signresult'+res.data.listQuestion01[i].number+'>'+res.data.listQuestion01[i].number+'</a>';
+                    signhtml+='<li style=""><div class="subject-con bor clearfix m-question " id=signid'+res.data.listQuestion01[i].number+' style=""><div class="subject-con"><div class="sub-content "><i class="subjec-daan" style="display: none;"></i><div class="sub-dotitle"><em>'+res.data.listQuestion01[i].number+'</em> <i>[单选题]</i>'+res.data.listQuestion01[i].question_content+'('+res.data.listQuestion01[i].question_grade+'分)</div><dl class="sub-answer">';
+                    //会将空值过滤
+                    if(res.data.listQuestion01[i].question_a!=undefined&&res.data.listQuestion01[i].question_a!=""){
+                        signhtml+='<dd class="m-question-option "><input value="A" type="radio" name=answername'+res.data.listQuestion01[i].number+'><i></i><span>A.</span>'+res.data.listQuestion01[i].question_a+'</dd>';
+                    }
+                    if(res.data.listQuestion01[i].question_b!=undefined&&res.data.listQuestion01[i].question_b!=""){
+                        signhtml+='<dd class="m-question-option "><input value="B" type="radio" name=answername'+res.data.listQuestion01[i].number+'><i></i><span>B.</span>'+res.data.listQuestion01[i].question_b+'</dd>';
+                    }
+                    if(res.data.listQuestion01[i].question_c!=undefined&&res.data.listQuestion01[i].question_c!=""){
+                        signhtml+='<dd class="m-question-option "><input value="C" type="radio" name=answername'+res.data.listQuestion01[i].number+'><i></i><span>C.</span>'+res.data.listQuestion01[i].question_c+'</dd>';
+                    }
+                    if(res.data.listQuestion01[i].question_d!=undefined&&res.data.listQuestion01[i].question_d!=""){
+                        signhtml+='<dd class="m-question-option "><input value="D" type="radio" name=answername'+res.data.listQuestion01[i].number+'><i></i><span>D.</span>'+res.data.listQuestion01[i].question_d+'</dd>';
+                    }
+                    if(res.data.listQuestion01[i].question_e!=undefined&&res.data.listQuestion01[i].question_e!=""){
+                        signhtml+='<dd class="m-question-option "><input value="E" type="radio" name=answername'+res.data.listQuestion01[i].number+'><i></i><span>E.</span>'+res.data.listQuestion01[i].question_e+'</dd>';
+                    }
+                    if(res.data.listQuestion01[i].question_f!=undefined&&res.data.listQuestion01[i].question_f!=""){
+                        signhtml+='<dd class="m-question-option "><input value="F" type="radio" name=answername'+res.data.listQuestion01[i].number+'><i></i><span>F.</span>'+res.data.listQuestion01[i].question_f+'</dd>';
+                    }
+                    signhtml+='</dl></div></div></div></li>';
+                    signnumber=res.data.listQuestion01[i].number;
+                    signquestionlist+=res.data.listQuestion01[i].question_id+',';
+                }
+                $('#question01').html(signhtml);
+                $('#signresult').html(signresult);
+                $('#signnumber').val(signnumber);
+                $('#signquestionlist').val(signquestionlist);
+            }
+            // 多选
+            if(res.data.listQuestion02!=""){
+                for(var i=0;i<res.data.listQuestion02.length;i++){
+                    // 控值
+                    mostresult+='<a href="javascript:;" class="e__answerCard page-card-item" id=mostresult'+res.data.listQuestion02[i].number+'>'+res.data.listQuestion02[i].number+'</a>';
+                    mosthtml+='<li style=""><div class="subject-con bor clearfix m-question " id=signid'+res.data.listQuestion02[i].number+' style=""><div class="subject-con"><div class="sub-content "><i class="subjec-daan" style="display: none;"></i><div class="sub-dotitle"><em>'+res.data.listQuestion02[i].number+'</em> <i>[多选题]</i>'+res.data.listQuestion02[i].question_content+'('+res.data.listQuestion02[i].question_grade+'分)</div><dl class="sub-answer">';
+                    //会将空值过滤
+                    if(res.data.listQuestion02[i].question_a!=undefined&&res.data.listQuestion02[i].question_a!=""){
+                        mosthtml+='<dd class="m-question-option "><input value="A" type="checkbox" name=mostanswername'+res.data.listQuestion02[i].number+'><i></i><span>A.</span>'+res.data.listQuestion02[i].question_a+'</dd>';
+                    }
+                    if(res.data.listQuestion02[i].question_b!=undefined&&res.data.listQuestion02[i].question_b!=""){
+                        mosthtml+='<dd class="m-question-option "><input value="B" type="checkbox" name=mostanswername'+res.data.listQuestion02[i].number+'><i></i><span>B.</span>'+res.data.listQuestion02[i].question_b+'</dd>';
+                    }
+                    if(res.data.listQuestion02[i].question_c!=undefined&&res.data.listQuestion02[i].question_c!=""){
+                        mosthtml+='<dd class="m-question-option "><input value="C" type="checkbox" name=mostanswername'+res.data.listQuestion02[i].number+'><i></i><span>C.</span>'+res.data.listQuestion02[i].question_c+'</dd>';
+                    }
+                    if(res.data.listQuestion02[i].question_d!=undefined&&res.data.listQuestion02[i].question_d!=""){
+                        mosthtml+='<dd class="m-question-option "><input value="D" type="checkbox" name=mostanswername'+res.data.listQuestion02[i].number+'><i></i><span>D.</span>'+res.data.listQuestion02[i].question_d+'</dd>';
+                    }
+                    if(res.data.listQuestion02[i].question_e!=undefined&&res.data.listQuestion02[i].question_e!=""){
+                        mosthtml+='<dd class="m-question-option "><input value="E" type="checkbox" name=mostanswername'+res.data.listQuestion02[i].number+'><i></i><span>E.</span>'+res.data.listQuestion02[i].question_e+'</dd>';
+                    }
+                    if(res.data.listQuestion02[i].question_f!=undefined&&res.data.listQuestion02[i].question_f!=""){
+                        mosthtml+='<dd class="m-question-option "><input value="F" type="checkbox" name=mostanswername'+res.data.listQuestion02[i].number+'><i></i><span>F.</span>'+res.data.listQuestion02[i].question_f+'</dd>';
+                    }
+                    mosthtml+='</dl></div></div></div></li>';
+                    mostnumber=res.data.listQuestion02[i].number;
+                    mostquestionlist+=res.data.listQuestion02[i].question_id+',';
+                }
+                $('#question02').html(mosthtml);
+                $('#mostresult').html(mostresult);
+                $('#mostnumber').val(mostnumber);
+                $('#mostquestionlist').val(mostquestionlist);
+            }
+            console.log(res.data);
+        }
+    },
+    error:function(xhr){
+        layer.msg("您还未登录");
+        window.location.href="login.html";
+    }
+});
+
+</script>
+
+
+
+
+</body></html>

@@ -1,6 +1,7 @@
 package com.example.exam.controller;
 
 import com.example.exam.exception.UnauthorizedException;
+import com.example.exam.model.User;
 import com.example.exam.model.UserBean;
 import com.example.exam.service.UserService;
 import com.example.exam.util.JWTUtil;
@@ -13,6 +14,10 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import sun.tools.jstat.Token;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class WebController {
@@ -30,9 +35,12 @@ public class WebController {
     public com.example.exam.model.ResponseBean login(@RequestParam("username") String username,
                                                   @RequestParam("password") String password) {
         System.out.println(username);
-        UserBean userBean = userService.getUser(username);
-        if (userBean.getPassword().equals(password)) {
-            return new com.example.exam.model.ResponseBean(201, "Login success", JWTUtil.sign(username, password));
+        User userBean = userService.getUserinfo(username);
+        if (userBean.getUserPassword().equals(password)) {
+            Map<String, String> data = new HashMap<>();
+            data.put("token", JWTUtil.sign(username, password));
+            data.put("usertype", userBean.getUserRole());
+            return new com.example.exam.model.ResponseBean(200, "Login success", data);
         } else {
             throw new UnauthorizedException();
         }

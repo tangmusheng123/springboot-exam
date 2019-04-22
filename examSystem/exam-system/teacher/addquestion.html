@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="UTF-8">
+</head>
+
+<body>
+	<div class="layui-fluid">  
+	  	
+	  	<div class="layui-row">
+		    <div class="layui-col-md12 " style="margin-top: 20px;">
+		    	<div style="text-align: center;"><h3>添加题目</h3></div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 20%; width: 15%;float: left;">
+		    		请输入题目内容：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<input style="width: 100%;height: 20px;"  type="text"  id="content">
+		    	</div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 20%;width: 15%;float: left;">
+		    		请输入A选项：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<input style="width: 100%;height: 20px;" type="text"  id="question_a">
+		    	</div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 20%;width: 15%;float: left;">
+		    		请输入B选项：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<input style="width: 100%;height: 20px;" type="text" id="question_b">
+		    	</div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 20%;width: 15%;float: left;">
+		    		请输入C选项：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<input style="width: 100%;height: 20px;" type="text" id="question_c">
+		    	</div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 20%;width: 15%;float: left;">
+		    		请输入D选项：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<input style="width: 100%;height: 20px;" type="text" id="question_d">
+		    	</div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 20%;width: 15%;float: left;">
+		    		请输入E选项：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<input style="width: 100%;height: 20px;" type="text" id="question_e">
+		    	</div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 20%;width: 15%;float: left;">
+		    		请输入F选项：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<input style="width: 100%;height: 20px;" type="text" id="question_f" >
+		    	</div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 10%;width: 25%;float: left;">
+		    		请选择正确答案(多选题答案用英文逗号隔开如:A,B,C)：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<input style="width: 100%;height: 20px;" type="text" id="answer" >
+		    	</div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 10%;width: 25%;float: left;">
+		    		请输入题目分数：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<input style="width: 100%;height: 20px;" type="text" id="grade" >
+		    	</div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 20%;width: 15%;float: left;">
+		    		请选择题目类型：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<select style="width: 100%;height: 20px;" id="type">
+		    			<option value="01">单选</option>
+		    			<option value="02">多选</option>
+		    		</select>
+		    	</div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 20%;width: 15%;float: left;">
+		    		请选择类型：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<select style="width: 100%;height: 20px;" id="questiontype">
+		    			<!-- <option>单选</option>
+		    			<option>多选</option> -->
+		    		</select>
+		    	</div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 45%;width: 15%;float: left;">
+		    		<button type="button" class="layui-btn layui-btn-radius layui-btn-normal" onclick="submit();">提交题目</button>
+		    	</div>
+		    	
+		    </div>
+	  	</div>
+	</div>
+</body>
+<script type="text/javascript" src="js/cookie.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="js/layui/css/layui.css">
+    <script type="text/javascript" src="js/layui/layui.all.js"></script>
+    <script type="text/javascript" src = "js/jquery.min.js" charset="UTF-8"></script>
+<script>
+//JavaScript代码区域
+layui.use('element', function(){
+  var element = layui.element;
+});
+layui.use('form', function(){
+  var form = layui.form;
+  
+});
+var username=getCookie("username");
+var token=getCookie("token");
+$.ajax({
+    type: "post",
+    url: "http://localhost:7800/teacher/getquesttype",
+    contentType: "application/x-www-form-urlencoded",
+    beforeSend: function(request) {
+        request.setRequestHeader("Authorization", token);
+    },
+    data:{username:username},
+    success: function(res) {
+        var html="";
+        if(res.data!=""){
+            for(var i=0;i<res.data.length;i++){
+                if(i==0){
+                    html+="<option selected value="+res.data[i].questiontypeId+">"+res.data[i].questiontypeName+"</option>";
+                }else{
+                    html+="<option value="+res.data[i].questiontypeId+">"+res.data[i].questiontypeName+"</option>";
+                }
+                
+            }
+        }else{
+            html+="<option selected value=0>暂无数据</option>";
+        }
+       	$('#questiontype').html(html);
+       }
+   })
+function submit(){
+	var content=$('#content').val();
+	var question_a=$('#question_a').val();
+	var question_b=$('#question_b').val();
+	var question_c=$('#question_c').val();
+	var question_d=$('#question_d').val();
+	var question_e=$('#question_e').val();
+	var question_f=$('#question_f').val();
+	var grade=$('#grade').val();
+	var answer=$('#answer').val();
+	var type=$('#type').val();
+	var questiontype=$('#questiontype').val();
+	$.ajax({
+	    type: "post",
+	    url: "http://localhost:7800/teacher/addquestion",
+	    contentType: "application/x-www-form-urlencoded",
+	    beforeSend: function(request) {
+	        request.setRequestHeader("Authorization", token);
+	    },
+	    data:{username:username,content:content,question_a:question_a,question_b:question_b,question_c:question_c,question_d:question_d,question_e:question_e,question_f:question_f,answer:answer,type:type,questiontype:questiontype,grade:grade},
+	    success: function(res) {
+	    	layer.msg("添加试题成功,2s后返回");
+            setTimeout(function(){
+                window.location.href=""
+            },2000);
+	    }
+	});
+}
+</script>
+</html>

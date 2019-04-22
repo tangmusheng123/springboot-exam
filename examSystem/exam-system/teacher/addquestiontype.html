@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="UTF-8">
+</head>
+
+<body>
+	<div class="layui-fluid">  
+	  	
+	  	<div class="layui-row">
+		    <div class="layui-col-md12 " style="margin-top: 20px;">
+		    	<div style="text-align: center;"><h3>添加题目类型</h3></div>
+		    </div>
+		    <div class="layui-col-md12" style="padding: 20px;">
+		    	<div style="margin-left: 20%; width: 15%;float: left;margin-top: 8px;">
+		    		请输入类型名称：
+		    	</div>
+		    	<div style="width: 50%;float: left;">
+		    		<input style="width: 70%;height: 20px;"  type="text"  id="name">
+		    		<button type="button" class="layui-btn layui-btn-radius layui-btn-normal" onclick="submit();">提交</button>
+		    	</div>
+		    </div>
+
+	  	</div>
+	  	<div class="layui-row">
+	  		<div class="layui-col-md12" style="margin-top: 20px;">
+	  			<table class="layui-table">
+				  <colgroup>
+				    <col width="150">
+				    <col width="200">
+				    <col>
+				  </colgroup>
+				  <thead>
+				    <tr>
+				      <th>类型ID</th>
+				      <th>类型名</th>
+				      <th>创建时间</th>
+				      <th>操作</th>
+				    </tr> 
+				  </thead>
+				  <tbody id="questiontypelist">
+				    
+				  </tbody>
+				</table>
+	  		</div>
+	  	</div>
+	</div>
+</body>
+<script type="text/javascript" src="js/cookie.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="js/layui/css/layui.css">
+    <script type="text/javascript" src="js/layui/layui.all.js"></script>
+    <script type="text/javascript" src = "js/jquery.min.js" charset="UTF-8"></script>
+<script>
+//JavaScript代码区域
+layui.use('element', function(){
+  var element = layui.element;
+});
+layui.use('form', function(){
+  var form = layui.form;
+  
+});
+var username=getCookie("username");
+var token=getCookie("token");
+$.ajax({
+    type: "post",
+    url: "http://localhost:7800/teacher/getquesttypelist",
+    contentType: "application/x-www-form-urlencoded",
+    beforeSend: function(request) {
+        request.setRequestHeader("Authorization", token);
+    },
+    data:{username:username},
+    success: function(res) {
+    	if(res.data!=""){
+    		var html="";
+    		for(var i=0;i<res.data.length;i++){
+    			html+="<tr><td>"+res.data[i].questiontypeId+"</td>";
+    			html+="<td>"+res.data[i].questiontypeName+"</td>";
+    			html+="<td>"+res.data[i].questiontypeTime+"</td>";
+    			html+="<td><a style='cursor:pointer;' onclick=delquestiontype('"+res.data[i].questiontypeId+"')>删除</a></td></tr>";
+    		}
+    		$('#questiontypelist').html(html);
+    	}else{
+    		$('#questiontypelist').html("暂无数据");
+    	}
+       }
+   })
+function delquestiontype(type_id){
+	$.ajax({
+	    type: "post",
+	    url: "http://localhost:7800/teacher/delquestiontype",
+	    contentType: "application/x-www-form-urlencoded",
+	    beforeSend: function(request) {
+	        request.setRequestHeader("Authorization", token);
+	    },
+	    data:{username:username,questiontype:type_id},
+	    success:function(res){
+	    	layer.msg("添加类型成功,2s后刷新");
+            setTimeout(function(){
+                window.location.href=""
+            },2000);
+	    },
+	    error:function(xhr){
+	    	layer.msg("删除失败，该类型还存在题目");
+            setTimeout(function(){
+                window.location.href=""
+            },2000);
+	    }
+	});
+}
+function submit(){
+	var name=$('#name').val();
+	$.ajax({
+	    type: "post",
+	    url: "http://localhost:7800/teacher/addquestiontype",
+	    contentType: "application/x-www-form-urlencoded",
+	    beforeSend: function(request) {
+	        request.setRequestHeader("Authorization", token);
+	    },
+	    data:{username:username,questiontype:name},
+	    success: function(res) {
+	    	layer.msg("添加类型成功,2s后刷新");
+            setTimeout(function(){
+                window.location.href=""
+            },2000);
+	    }
+	});
+}
+</script>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>学生管理</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/student-manage.css" />
+    <script type="text/javascript" src="js/cookie.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="js/layui/css/layui.css">
+    <script type="text/javascript" src="js/layui/layui.all.js"></script>
+</head>
+<body class="row">
+
+<!-- left area -->
+<div class="left col-md-2">
+    <aside>
+        <div class="welcome t-c">
+            <strong>在线考试管理系统</strong>
+        </div>
+        <ul class="f-16">
+            <a href="student-manage.html"  class="side-menu-color"><li class="nav-list-item-actived">
+                <i class="icon ion-person-stalker f-18 m-r-10"></i> 学生查看
+                <span class="icon ion-android-radio-button-off f-r f-13"></span>
+            </li></a>
+            
+            <a href="lesson-info.html" class="side-menu-color"><li class="course menu">
+                <i class="icon ion-ios-arrow-forward f-18 m-r-10"></i>  课程组卷
+                <span class="icon ion-android-checkbox-outline f-r f-18"></span>
+            </li></a>
+            <a href="subject-library.html"  class="side-menu-color"><li class="course">
+                <i class="icon ion-ios-arrow-forward f-18 m-r-10"></i>  题库管理
+                <span class="icon ion-android-list f-r f-18"></span>
+            </li></a>
+           
+        </ul>
+    </aside>
+</div>
+<!-- left area end -->
+
+<!-- right area -->
+<div class="right col-md-10 f-r">
+    <header>
+       
+        <span id="userName" class="m-r-10"></span>
+    </header>
+    <main>
+    	<div class="heading clearfix">
+        	<h4 class="f-l">学生管理 </h4>
+        	
+    	</div>
+     	<div class="fliter row clearfix">
+     		
+        	<table class="table table-hover m-t-20" id="tableUser">
+               <!-- On cells (`td` or `th`) -->
+               <thead id="userThead">
+                <tr class="active">
+                  <td>学号</td>
+                  <td>姓名</td>
+                  <td>参加课程</td>
+                </tr>
+                </thead>
+             	<tbody id="userTbody">
+               </tbody>
+			</table>
+
+    </main>
+ 
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/student-manage.js"></script>
+<script type="text/javascript" src="js/member-manage.js"></script>
+<script type="text/javascript">
+var username=getCookie("username");
+var token=getCookie("token");
+    // alert(username);
+$('#userName').html(username+"&emsp;<a href='../login.html' onclick='loginout()'>退出</a>");
+$.ajax({
+    type: "post",
+    url: "http://localhost:7800/teacher/getstudent",
+    contentType: "application/x-www-form-urlencoded",
+    beforeSend: function(request) {
+        request.setRequestHeader("Authorization", token);
+    },
+    data:{username:username},
+    success: function(res) {
+        var html="";
+        if(res.data!=''){
+            for(var i=0;i<res.data.length;i++){
+                html+="<tr><td>"+res.data[i].studentName+"</td><td>"+res.data[i].classesName+"</td><td>"+res.data[i].userNumber+"</td></tr>"
+            }
+            $('#userTbody').html(html);
+        }else{
+            $('#userTbody').html("暂无数据");
+        }
+        
+    }
+});
+</script>
+
+</body>
+</html>

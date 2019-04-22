@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Answer implements Serializable {
     private Integer answerId;
 
-    private Integer studentId;
+    private Integer userId;
 
     private Integer examId;
 
@@ -56,12 +56,12 @@ public class Answer implements Serializable {
         this.answerId = answerId;
     }
 
-    public Integer getStudentId() {
-        return studentId;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Integer getExamId() {
@@ -127,7 +127,7 @@ public class Answer implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", answerId=").append(answerId);
-        sb.append(", studentId=").append(studentId);
+        sb.append(", userId=").append(userId);
         sb.append(", examId=").append(examId);
         sb.append(", answerTime=").append(answerTime);
         sb.append(", answerAllgrade=").append(answerAllgrade);

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>在线考试系统</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<script type="text/javascript" src="js/cookie.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="js/layui/css/layui.css">
+	<script type="text/javascript" src="js/layui/layui.all.js"></script>
+</head>
+<body >
+<!--top menu-->
+<header>
+		<img src="img/图标.jpg">
+		<strong>在线考试管理系统</strong>
+        <ul class="nav nav-tabs myTab-all" role="tablist" id="myTab">
+
+		  <li role="presentation" class="active"><a href="#myClass" role="tab" data-toggle="tab">我的课程</a></li>
+		  <li role="presentation"><a href="#test" role="tab" data-toggle="tab">待考课程</a></li>
+		  <li role="presentation"><a href="#history" role="tab" data-toggle="tab">历史成绩</a></li>
+		  <li role="presentation"><a href="#home" role="tab" data-toggle="tab">个人信息</a></li>
+		</ul>
+
+
+        <span id="userName" class="m-r-10"></span>
+</header>
+
+
+
+<!-- section area -->
+<div class="section col-md-10  clearfix">
+
+
+    	<div class="tab-content">
+
+
+
+		  <div role="tabpanel" class="tab-pane panel panel-info fade in active" id="myClass">
+		
+		  </div>
+              <div role="tabpanel" class="tab-pane panel panel-info fade" id="test">
+           
+          </div>
+
+
+		  <div role="tabpanel" class="tab-pane fade panel panel-info" id="history">
+          		<table class="history-table table table-striped" id="historylist">
+                    </table>
+          </div>
+
+
+		<div role="tabpanel" class="tab-pane fade panel panel-info " id="home">
+			<div class="panel-heading">
+				<h3 class="panel-title">个人信息</h3>
+			</div>
+		  	<ul id="detailed" class="panel-body">
+		  		<li>学号：<span id="usernumber1"></span></li>
+		  		<li>姓名：<span id="username1"></span></li>
+		  		<li>已有课程数量：<span id="userclasses1"></span></li>
+		  		<li>注册时间：<span id="usertime1"></span></li>
+		  	</ul>
+
+
+		</div>
+		</div>
+</div>
+
+
+
+<script type="text/javascript" src = "js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src = "js/common.js"></script>
+<script>
+
+var username=getCookie("username");
+var token=getCookie("token");
+	// alert(username);
+$('#userName').html(username+"&emsp;<a href='login.html' onclick='loginout()'>退出</a>");
+
+$.ajax({
+    type: "post",
+    url: "http://localhost:7800/student/getclasses",
+    contentType: "application/x-www-form-urlencoded",
+    beforeSend: function(request) {
+        request.setRequestHeader("Authorization", token);
+    },
+    data:{username:username},
+    success: function(res) {
+    	console.log(res);
+        if(res.code=="200"){
+        	console.log(res.data.list);
+        	var html="";
+        	for(var i=0;i<res.data.list.length;i++){
+        		html+='<div class="one"><i class="layui-icon">&#xe653;</i><h3>'+res.data.list[i].classesName+'</h3></div>';
+        		console.log(res.data.list[i]);
+        	}
+        	$('#myClass').html(html);
+        }else{
+        	layer.msg(res.msg, {
+				icon: 1,
+				time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				},function(){
+					location.href="login.html";
+				});
+        }
+    }
+});
+// 试卷列表
+// 试卷的接口1:班级名称2:试卷名称3:考试状态：教师名字
+$.ajax({
+    type: "post",
+    url: "http://localhost:7800/student/getexam",
+    contentType: "application/x-www-form-urlencoded",
+    beforeSend: function(request) {
+        request.setRequestHeader("Authorization", token);
+    },
+    data:{username:username},
+    success: function(res) {
+    	if(res.code=="200"){
+    		var html="";
+    		if(res.data.list!=""){
+	    		console.log(res.data.list);
+	    		// <div class="one">
+	      //               <i class="layui-icon">&#xe656;</i>
+	      //               <h3>程序语言</h3>
+	      //               <p>未完成</p>
+	      //              <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">start</button>
+	      //           </div>
+	      //           ///
+	            for(var i=0;i<res.data.list.length;i++){
+	            	html+='<div class="one"><i class="layui-icon">&#xe656;</i><h3>'+res.data.list[i].classesName+"</h3><p>";
+	            	if(res.data.list[i].examStatus=="01"){
+	            		html+="未完成</p><button class='layui-btn layui-btn-normal' onclick=intest("+res.data.list[i].examId+")>开始考试</button></div>";
+	            	}else{
+	            		html+="已完成</p><button class='layui-btn layui-btn-disabled' >已完成考试</button></div>";
+	            	}
+	            }
+	            $('#test').html(html);
+	        }
+    	}
+    }
+});
+//历史成绩
+
+$.ajax({
+	type: "post",
+    url: "http://localhost:7800/student/gethistory",
+    contentType: "application/x-www-form-urlencoded",
+    beforeSend: function(request) {
+        request.setRequestHeader("Authorization", token);
+    },
+    data:{username:username},
+    success: function(res) {
+    	var html="";
+    	html+="<tr><td>课程</td><td>状态</td><td>成绩</td><td>时间</td></tr>";
+    	for(var i=0;i<res.data.data.length;i++){
+    		html+="<tr><td>"+res.data.data[i].classesName+"</td>";
+    		html+="<td>"+res.data.data[i].status+"</td>";
+    		html+="<td>"+res.data.data[i].grade+"分</td>";
+    		html+="<td>"+res.data.data[i].time+"</td></tr>";
+    	}
+
+    	$('#historylist').html(html);
+    }
+})
+//个人信息
+$.ajax({
+	type: "post",
+    url: "http://localhost:7800/student/getuserinfo",
+    contentType: "application/x-www-form-urlencoded",
+    beforeSend: function(request) {
+        request.setRequestHeader("Authorization", token);
+    },
+    data:{username:username},
+    success: function(res) {
+    	
+		$('#usernumber1').html(res.data.userNumber);
+		$('#username1').html(res.data.userName);
+		$('#userclasses1').html(res.data.classesNum);
+		$('#usertime1').html(res.data.time);
+    }
+});
+//开始考试
+function intest(examid){
+	location.href="test.html?examid="+examid;
+}
+$(function () {
+    $('#myTab a:first').tab('show')
+  })
+
+  $('#myTab a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+var oMyTab = document.getElementById('myTab');
+var aLi = oMyTab.getElementsByTagName('li');
+//for(var i=0; i<aLi.length;i++)
+//{
+//	aLi[i].index = i;
+//	aLi[i].onclick = function(){
+//		for(var j=0;j<aLi.length;j++)
+//		if(this.index==j)
+//		{
+//			aLi[j].style.display = 'block';
+//		}
+//		else{
+//			aLi[j].style.display = 'none';
+//		}
+//	}
+//}
+</script>
+</body>
+</html>

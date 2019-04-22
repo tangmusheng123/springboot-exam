@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 试卷管理</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+
+    <!--题库管理的css-->
+    <link rel="stylesheet" href="css/subject-library.css" type="text/css"/>
+    <script type="text/javascript" src="js/cookie.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="js/layui/css/layui.css">
+    <script type="text/javascript" src="js/layui/layui.all.js"></script>
+
+</head>
+<body class="row">
+
+<!-- right area -->
+<div class=" f-r" style="width: 100%;">
+    <main>
+        <!--筛选课程下拉框-->
+        <div class="clearfix">
+            <div class="fliter row">
+
+                <div class="col-md-4 select-subject">
+                    <span>请选择试卷ID</span>
+                    <select id="questiontype" style="width: 200px;">
+                    </select>
+                    <br/>
+                    <br/>
+                </div>
+
+            </div>
+        </div>
+        <!-- 题目信息 -->
+        <table class="table table-hover t-c m-t-20" style="width:100%;" id="subject">
+            <thead style="width: 80%;margin-left: 10%;">
+            <tr>
+                <th class="clearfix col-md-1 t-c">
+                    <div class="checkbox f-l top-m-0">
+                        <!-- <label for="">
+                            <input id="check-all" type="checkbox" value=""/>
+                        </label> -->
+                    </div>
+                    题目ID
+                </th>
+                <th class="col-md-1 t-c">题目内容</th>
+                <th class="col-md-1 t-c">题目类型</th>
+            </tr>
+            </thead>
+            <tbody id="questionlist">
+            </tbody>
+        </table>
+    </main>
+</div>
+<script type="text/javascript" src = "js/jquery.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/bootstrap.min.js" charset="UTF-8"></script>
+<script type="text/javascript">
+var username=getCookie("username");
+var token=getCookie("token");
+var classesid=getQueryString("classesid");//获取get参数
+    // alert(username);
+$('#userName').html(username+"&emsp;<a href='../login.html' onclick='loginout()'>退出</a>");
+var questiontype="";
+// 获得试卷的时间表
+$.ajax({
+    type: "post",
+    url: "http://localhost:7800/teacher/getexamtime",
+    contentType: "application/x-www-form-urlencoded",
+    beforeSend: function(request) {
+        request.setRequestHeader("Authorization", token);
+    },
+    data:{username:username,classesid:classesid},
+    success: function(res) {
+        var html="";
+        if(res.data!=""){
+            for(var i=0;i<res.data.length;i++){
+                if(i==0){
+                    html+="<option selected value="+res.data[i].examId+">"+res.data[i].examId+"</option>";
+                    questiontype=res.data[i].examId;
+                }else{
+                    html+="<option value="+res.data[i].examId+">"+res.data[i].examId+"</option>";
+                }
+                
+            }
+        }else{
+            html+="<option selected value=0>暂无数据</option>";
+            questiontype=0;
+        }
+        
+        $('#questiontype').html(html);
+        $.ajax({
+            type: "post",
+            url: "http://localhost:7800/teacher/getexamquestion",
+            contentType: "application/x-www-form-urlencoded",
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization", token);
+            },
+            data:{username:username,examid:questiontype},
+            success: function(res) {
+                console.log(res);
+                if(res.data!=''){
+                    var html="";
+                    for(var i=0;i<res.data.length;i++){
+                        html+="<tr><td>"+res.data[i].question_id+"</td>";
+                        html+="<td>"+res.data[i].question_content+"</td>";
+                        if(res.data[i].question_type=="01"){
+                            html+="<td>单选题</td>";
+                        }else{
+                            html+="<td>多选题</td>";
+                        }
+                        html+="</tr>";
+                    }
+                    $('#questionlist').html(html);
+                }else{
+                    $('#questionlist').html("暂无数据");
+                }
+            }
+        })
+    }
+});
+$("#questiontype").change(function(){
+  var type=$('#questiontype').val();
+  $.ajax({
+        type: "post",
+        url: "http://localhost:7800/teacher/getexamquestion",
+        contentType: "application/x-www-form-urlencoded",
+        beforeSend: function(request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        data:{username:username,examid:type},
+        success: function(res) {
+            if(res.data!=''){
+                var html="";
+                for(var i=0;i<res.data.length;i++){
+                    html+="<tr><td>"+res.data[i].question_id+"</td>";
+                    html+="<td>"+res.data[i].question_content+"</td>";
+                    if(res.data[i].question_type=="01"){
+                        html+="<td>单选题</td>";
+                    }else{
+                        html+="<td>多选题</td>";
+                    }
+                    html+="</tr>";
+                }
+                $('#questionlist').html(html);
+            }else{
+                $('#questionlist').html("<tr><td>暂无数据</td></tr>");
+            }
+        }
+    })
+});
+</script>
+</body>
+</html>

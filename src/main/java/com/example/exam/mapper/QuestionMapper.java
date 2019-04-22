@@ -2,9 +2,8 @@ package com.example.exam.mapper;
 
 import com.example.exam.model.Question;
 import com.example.exam.model.QuestionExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface QuestionMapper {
     int countByExample(QuestionExample example);

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>在线考试管理系统</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/lesson-info.css">
+</head>
+<body class="row">
+
+<!-- left area -->
+<div class="left col-md-2">
+    <aside>
+        <div class="welcome t-c">
+            <strong>在线考试管理系统</strong>
+        </div>
+        <ul class="f-16">
+            <a href="student-manage.html"  class="side-menu-color"><li>
+                <i class="icon ion-person-stalker f-18 m-r-10"></i> 学生查看
+                <span class="icon ion-android-radio-button-off f-r f-13"></span>
+            </li></a>
+            <a href="lesson-info.html" class="side-menu-color"><li class="course nav-list-item-actived">
+                <i class="icon ion-ios-arrow-forward f-18 m-r-10"></i>  课程组卷
+                <span class="icon ion-android-checkbox-outline f-r f-18"></span>
+            </li></a>
+            <a href="subject-library.html"  class="side-menu-color"><li class="course">
+                <i class="icon ion-ios-arrow-forward f-18 m-r-10"></i>  题库管理
+                <span class="icon ion-android-list f-r f-18"></span>
+            </li></a>
+            
+        </ul>
+    </aside>
+</div>
+<!-- left area end -->
+
+<!-- right area -->
+<div class="right col-md-10 f-r">
+    <header>
+        <!-- <span class="notice-body"><i class="icon ion-alert"></i>  公告：</span><span id="notice">2016新卓越秋季软师报名进行中！</span> -->
+        <span id="userName" class="m-r-10"></span>
+    </header>
+    <main>
+        <div id="information">
+          <div class="heading clearfix" id="nav">
+            <h4 class="f-l">课程管理 <small>课程组卷</small></h4>
+            <ol class="breadcrumb f-r">
+              <li><a href="lesson-info.html">课程管理</a></li>
+              <li class="active">课程组卷</li>
+            </ol>
+          </div>
+          <div class="row">
+
+          </div>
+          <div class="content m-t-2">
+              <table class="table-information m-t-10" id="classeslist">
+            
+                  
+              </table>
+           
+          </div>
+        </div>
+    </main>
+</div>
+<script type="text/javascript"src = "js/jquery.min.js"></script>
+<script type="text/javascript" src = "js/common.js"></script>
+<script type="text/javascript" src="js/lesson-info.js" charset="GB2312"></script>
+<script type="text/javascript" src="js/ajax.js" charset="GB2312"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/student-manage.js"></script>
+<script type="text/javascript" src="js/member-manage.js"></script>
+<script type="text/javascript" src="js/cookie.js"></script>
+<link rel="stylesheet" type="text/css" href="css/common.css">
+<link rel="stylesheet" type="text/css" href="js/layui/css/layui.css">
+<script type="text/javascript" src="js/layui/layui.all.js"></script>
+<script type="text/javascript">
+var username=getCookie("username");
+var token=getCookie("token");
+    // alert(username);
+$('#userName').html(username+"&emsp;<a href='../login.html' onclick='loginout()'>退出</a>");
+$.ajax({
+    type: "post",
+    url: "http://localhost:7800/teacher/getclasseslist",
+    contentType: "application/x-www-form-urlencoded",
+    beforeSend: function(request) {
+        request.setRequestHeader("Authorization", token);
+    },
+    data:{username:username},
+    success: function(res) {
+      if(res.data!=""){
+        var html=""
+        html+='<tr class="title" style="background-color: rgb(223, 240, 216); background-position: initial initial; background-repeat: initial initial;"><td>课程号</td><td>课程名</td><td>学生数量</td><td>操作</td></tr>';
+        for(var i=0;i<res.data.length;i++){
+          html+='<tr style="background-color: rgb(252, 248, 227); background-position: initial initial; background-repeat: initial initial;"><td>'+res.data[i].classesId+'</td><td>'+res.data[i].classesName+'</td><td>'+res.data[i].studentNumber+'</td><td><a style="cursor:pointer;" onclick=usequestion("'+res.data[i].classesId+'")>开始组题</a> | <a style="cursor:pointer;" onclick=queryexam("'+res.data[i].classesId+'")>查看试卷</a></td></tr>'
+        }
+        $('#classeslist').html(html);
+      }else{
+        $('#classeslist').html("暂无数据");
+      }
+    }
+});
+function usequestion(classesid){
+   layer.open({
+      type: 2,
+      area:['1100px','600px;'],
+      content: 'usequestion.html?classesid='+classesid,
+      success: function(layero, index){
+        
+      }
+    });  
+}
+function queryexam(classesid){
+  layer.open({
+      type: 2,
+      area:['1100px','600px;'],
+      content: 'queryexam.html?classesid='+classesid,
+      success: function(layero, index){
+        
+      }
+    }); 
+}
+</script>
+</body>
+</html>
